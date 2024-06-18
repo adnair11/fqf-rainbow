@@ -318,6 +318,163 @@ class FullQuantileFunction(ImplicitQuantileNetwork):
         return (quantiles, fractions, quantiles_tau), hidden
 
 
+
+
+
+class FullQuantileFunctionRainbow(ImplicitQuantileNetwork):
+    """Full(y parameterized) Quantile Function with Noisy Networks and Dueling option.
+
+    :param preprocess_net: a self-defined preprocess_net which output a
+        flattened hidden state.
+    :param action_shape: a sequence of int for the shape of action.
+    :param hidden_sizes: a sequence of int for constructing the MLP after
+        preprocess_net. Default to empty sequence (where the MLP now contains
+        only a single linear layer).
+    :param num_cosines: the number of cosines to use for cosine embedding.
+        Default to 64.
+    :param preprocess_net_output_dim: the output dimension of
+        preprocess_net.
+    :param noisy_std: standard deviation for NoisyLinear layers. Default to 0.5.
+    :param is_noisy: whether to use noisy layers. Default to True.
+
+    .. note::
+
+        The first return value is a tuple of (quantiles, fractions, quantiles_tau),
+        where fractions is a Batch(taus, tau_hats, entropies).
+    """
+
+    def __init__(
+        self,
+        preprocess_net: nn.Module,
+        action_shape: TActionShape,
+        hidden_sizes: Sequence[int] = (),
+        num_cosines: int = 64,
+        preprocess_net_output_dim: int | None = None,
+        device: str | int | torch.device = "cpu",
+        noisy_std: float = 0.5,
+        is_noisy: bool = True,
+        is_dueling : bool = True
+    ) -> None:
+        super().__init__(
+            preprocess_net,
+            action_shape,
+            hidden_sizes,
+            num_cosines,
+            preprocess_net_output_dim,
+            device,
+        )
+
+        if preprocess_net_output_dim is None:
+            raise ValueError("preprocess_net_output_dim must be specified and not None.")
+        
+        # print(f"preprocess_net_output_dim: {preprocess_net_output_dim}")
+        # print(f"hidden_sizes: {hidden_sizes}")
+
+        self.action_shape = action_shape
+        self.noisy_std = noisy_std
+        self.is_noisy = is_noisy
+        self.is_dueling = is_dueling
+
+        print(action_shape,noisy_std)
+        print(preprocess_net_output_dim)
+
+        def linear(x: int, y: int) -> nn.Module:
+            if self.is_noisy:
+                return NoisyLinear(x, y, self.noisy_std)
+            return nn.Linear(x, y)
+
+        # Define the advantage network
+
+        self.advantage_net = nn.Sequential(
+            linear(preprocess_net_output_dim, 512),
+            nn.ReLU(inplace=True),
+            linear(512, self.action_shape)
+        )
+
+        # print("Advantage net", self.advantage_net)
+        
+
+         # Define the value network for dueling architecture
+        if self.is_dueling:
+            self.value_net = nn.Sequential(
+                linear(preprocess_net_output_dim, 512),
+                nn.ReLU(inplace=True),
+                linear(512, 1) # Output dimension is 1 for the value function
+            )
+            print("Dueling is True")
+
+
+        # print("The value net", self.value_net)
+
+        # if self.is_noisy:
+        #     self.last = nn.Sequential(
+        #     NoisyLinear(3136, 512),
+        #     nn.ReLU(inplace=True),
+        #     NoisyLinear(512, action_shape)
+        #                             )
+
+        # print(self.last)
+
+        # self.embed_model = nn.Linear(num_cosines, preprocess_net_output_dim)
+
+    def _compute_quantiles(self, obs: torch.Tensor, taus: torch.Tensor) -> torch.Tensor:
+        batch_size, sample_size = taus.shape
+        embedding = (obs.unsqueeze(1) * self.embed_model(taus)).view(batch_size * sample_size, -1)
+
+        # Compute advantages
+        advantage = self.advantage_net(embedding).view(batch_size, sample_size, -1).transpose(1, 2)
+
+        if self.is_dueling:
+            # Compute value
+            value = self.value_net(embedding).view(batch_size, sample_size, 1).transpose(1, 2)
+            # Combine value and advantage to compute quantiles
+            quantiles = value + (advantage - advantage.mean(dim=1, keepdim=True))
+        else:
+            quantiles = advantage
+        
+        return quantiles
+
+        # return self.last(embedding).view(batch_size, sample_size, -1).transpose(1, 2)
+
+
+
+
+    def forward(
+        self,
+        obs: np.ndarray | torch.Tensor,
+        propose_model: FractionProposalNetwork,
+        fractions: Batch | None = None,
+        **kwargs: Any,
+    ) -> tuple[Any, torch.Tensor]:
+        r"""Mapping: s -> Q(s, \*)."""
+        logits, hidden = self.preprocess(obs, state=kwargs.get("state", None))
+        # Propose fractions
+        if fractions is None:
+            taus, tau_hats, entropies = propose_model(logits.detach())
+            fractions = Batch(taus=taus, tau_hats=tau_hats, entropies=entropies)
+        else:
+            taus, tau_hats = fractions.taus, fractions.tau_hats
+        quantiles = self._compute_quantiles(logits, tau_hats)
+        # Calculate quantiles_tau for computing fraction grad
+        quantiles_tau = None
+        if self.training:
+            with torch.no_grad():
+                quantiles_tau = self._compute_quantiles(logits, taus[:, 1:-1])
+        return (quantiles, fractions, quantiles_tau), hidden
+
+class NoisyLinear(nn.Module):
+    """Implementation of Noisy Networks. arXiv:1706.10295.
+
+    :param in_features: the number of input features.
+    :param out_features: the number of output features.
+    :param noisy_std: initial standard deviation of noisy linear layers.
+
+    .. note::
+
+        Adapted from https://github.com/ku2482/fqf-iqn-qrdqn.pytorch/blob/master
+        /fqf_iqn_qrdqn/network.py .
+    """
+
 class NoisyLinear(nn.Module):
     """Implementation of Noisy Networks. arXiv:1706.10295.
 
