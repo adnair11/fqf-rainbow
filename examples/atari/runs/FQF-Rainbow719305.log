@@ -1,0 +1,85 @@
+Observations shape: (4, 84, 84)
+Actions shape: 6
+3136
+6 0.1
+3136
+Dueling is True
+FullQuantileFunctionRainbow(
+  (preprocess): DQN(
+    (net): Sequential(
+      (0): Conv2d(4, 32, kernel_size=(8, 8), stride=(4, 4))
+      (1): ReLU(inplace=True)
+      (2): Conv2d(32, 64, kernel_size=(4, 4), stride=(2, 2))
+      (3): ReLU(inplace=True)
+      (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1))
+      (5): ReLU(inplace=True)
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+  )
+  (last): MLP(
+    (model): Sequential(
+      (0): Linear(in_features=3136, out_features=512, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=512, out_features=6, bias=True)
+    )
+  )
+  (embed_model): CosineEmbeddingNetwork(
+    (net): Sequential(
+      (0): Linear(in_features=64, out_features=3136, bias=True)
+      (1): ReLU()
+    )
+  )
+  (advantage_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+  (value_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+)
+Noisy is True
+Using PER
+PER as buffer
+Epoch #1: test_reward: -20.500000 ± 0.500000, best_reward: -20.500000 ± 0.500000 in #1
+Epoch #2: test_reward: -15.700000 ± 2.609598, best_reward: -15.700000 ± 2.609598 in #2
+Epoch #3: test_reward: -12.000000 ± 3.687818, best_reward: -12.000000 ± 3.687818 in #3
+Epoch #4: test_reward: -10.600000 ± 2.200000, best_reward: -10.600000 ± 2.200000 in #4
+Epoch #5: test_reward: 2.300000 ± 7.253275, best_reward: 2.300000 ± 7.253275 in #5
+Epoch #6: test_reward: 8.300000 ± 5.040833, best_reward: 8.300000 ± 5.040833 in #6
+Epoch #7: test_reward: 19.900000 ± 0.300000, best_reward: 19.900000 ± 0.300000 in #7
+Epoch #8: test_reward: 19.800000 ± 0.748331, best_reward: 19.900000 ± 0.300000 in #7
+Epoch #9: test_reward: 20.100000 ± 0.700000, best_reward: 20.100000 ± 0.700000 in #9
+InfoStats(gradient_step=90000,
+          best_reward=20.1,
+          best_reward_std=0.7,
+          train_step=900000,
+          train_episode=567,
+          test_step=208610,
+          test_episode=100,
+          timing=TimingStats(total_time=6513.4170298576355,
+                             train_time=6031.72478890419,
+                             train_time_collect=1807.7611570358276,
+                             train_time_update=4107.758489847183,
+                             test_time=481.69224095344543,
+                             update_speed=149.2110518131758))
+Setup test envs ...
+Testing agent ...
+CollectStats
+----------------------------------------
+{   'collect_speed': 441.63502451643984,
+    'collect_time': 39.89719796180725,
+    'lens': array([1696, 1696, 1698, 1700, 1734, 1758, 1820, 1821, 1848, 1849]),
+    'lens_stat': {   'max': 1849.0,
+                     'mean': 1762.0,
+                     'min': 1696.0,
+                     'std': 62.65939674143057},
+    'n_collected_episodes': 10,
+    'n_collected_steps': 17620,
+    'returns': array([21., 21., 21., 21., 20., 20., 21., 21., 20., 20.]),
+    'returns_stat': {   'max': 21.0,
+                        'mean': 20.6,
+                        'min': 20.0,
+                        'std': 0.4898979485566356}}

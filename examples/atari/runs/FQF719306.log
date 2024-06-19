@@ -1,0 +1,42 @@
+git config --global user.email y*********@gmail.comObservations shape: (4, 84, 84)
+Actions shape: 6
+Epoch #1: test_reward: -20.000000 ± 1.549193, best_reward: -20.000000 ± 1.549193 in #1
+Epoch #2: test_reward: -20.700000 ± 0.458258, best_reward: -20.000000 ± 1.549193 in #1
+Epoch #3: test_reward: -17.900000 ± 2.343075, best_reward: -17.900000 ± 2.343075 in #3
+Epoch #4: test_reward: -4.900000 ± 9.575490, best_reward: -4.900000 ± 9.575490 in #4
+Epoch #5: test_reward: -4.000000 ± 5.347897, best_reward: -4.000000 ± 5.347897 in #5
+Epoch #6: test_reward: -6.100000 ± 6.073714, best_reward: -4.000000 ± 5.347897 in #5
+Epoch #7: test_reward: -7.700000 ± 4.124318, best_reward: -4.000000 ± 5.347897 in #5
+Epoch #8: test_reward: 19.500000 ± 1.024695, best_reward: 19.500000 ± 1.024695 in #8
+Epoch #9: test_reward: 20.500000 ± 0.670820, best_reward: 20.500000 ± 0.670820 in #9
+InfoStats(gradient_step=90000,
+          best_reward=20.5,
+          best_reward_std=0.6708203932499369,
+          train_step=900000,
+          train_episode=575,
+          test_step=228125,
+          test_episode=100,
+          timing=TimingStats(total_time=5723.505018949509,
+                             train_time=5167.999030828476,
+                             train_time_collect=2175.0630719661713,
+                             train_time_update=2888.654403448105,
+                             test_time=555.5059881210327,
+                             update_speed=174.14863946979534))
+Setup test envs ...
+Testing agent ...
+CollectStats
+----------------------------------------
+{   'collect_speed': 427.9266322865927,
+    'collect_time': 42.649834394454956,
+    'lens': array([1757, 1761, 1761, 1816, 1829, 1852, 1853, 1854, 1855, 1913]),
+    'lens_stat': {   'max': 1913.0,
+                     'mean': 1825.1,
+                     'min': 1757.0,
+                     'std': 48.89877299074078},
+    'n_collected_episodes': 10,
+    'n_collected_steps': 18251,
+    'returns': array([21., 21., 21., 20., 20., 20., 20., 20., 20., 20.]),
+    'returns_stat': {   'max': 21.0,
+                        'mean': 20.3,
+                        'min': 20.0,
+                        'std': 0.45825756949558394}}
