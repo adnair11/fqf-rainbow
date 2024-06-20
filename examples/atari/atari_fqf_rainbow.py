@@ -104,6 +104,7 @@ def test_fqf(args: argparse.Namespace = get_args()) -> None:
     feature_net = DQN(*args.state_shape, args.action_shape, args.device, features_only=True)
     preprocess_net_output_dim = feature_net.output_dim  # Ensure this is correctly set
     print(preprocess_net_output_dim)
+    print("device is",args.device )
     net = FullQuantileFunctionRainbow(
         preprocess_net=feature_net,
         action_shape=args.action_shape,

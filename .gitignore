@@ -159,3 +159,6 @@ docs/conf.py
 # temporary scripts (for ad-hoc testing), temp folder
 /temp
 /temp*.py
+examples/atari/runs/FQF-Rainbow-pacman719308.err
+examples/atari/runs/FQF-pacman719307.err
+examples/atari/runs/FQF-pacman719307.err

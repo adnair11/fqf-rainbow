@@ -1,0 +1,99 @@
+Observations shape: (4, 84, 84)
+Actions shape: 9
+3136
+device is cuda
+9 0.1
+3136
+Dueling is True
+FullQuantileFunctionRainbow(
+  (preprocess): DQN(
+    (net): Sequential(
+      (0): Conv2d(4, 32, kernel_size=(8, 8), stride=(4, 4))
+      (1): ReLU(inplace=True)
+      (2): Conv2d(32, 64, kernel_size=(4, 4), stride=(2, 2))
+      (3): ReLU(inplace=True)
+      (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1))
+      (5): ReLU(inplace=True)
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+  )
+  (last): MLP(
+    (model): Sequential(
+      (0): Linear(in_features=3136, out_features=512, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=512, out_features=9, bias=True)
+    )
+  )
+  (embed_model): CosineEmbeddingNetwork(
+    (net): Sequential(
+      (0): Linear(in_features=64, out_features=3136, bias=True)
+      (1): ReLU()
+    )
+  )
+  (advantage_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+  (value_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+)
+Noisy is True
+Using PER
+PER as buffer
+Epoch #1: test_reward: 379.000000 ± 93.642939, best_reward: 379.000000 ± 93.642939 in #1
+Epoch #2: test_reward: 942.000000 ± 363.229955, best_reward: 942.000000 ± 363.229955 in #2
+Epoch #3: test_reward: 1107.000000 ± 255.148976, best_reward: 1107.000000 ± 255.148976 in #3
+Epoch #4: test_reward: 1006.000000 ± 618.000000, best_reward: 1107.000000 ± 255.148976 in #3
+Epoch #5: test_reward: 1207.000000 ± 289.034600, best_reward: 1207.000000 ± 289.034600 in #5
+Epoch #6: test_reward: 1262.000000 ± 415.543018, best_reward: 1262.000000 ± 415.543018 in #6
+Epoch #7: test_reward: 2018.000000 ± 539.625796, best_reward: 2018.000000 ± 539.625796 in #7
+Epoch #8: test_reward: 2050.000000 ± 1249.951999, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #9: test_reward: 1304.000000 ± 363.020661, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #10: test_reward: 1756.000000 ± 306.796349, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #11: test_reward: 1506.000000 ± 246.503550, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #12: test_reward: 1452.000000 ± 348.906864, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #13: test_reward: 1554.000000 ± 595.587105, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #14: test_reward: 1547.000000 ± 292.097586, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #15: test_reward: 1951.000000 ± 941.588551, best_reward: 2050.000000 ± 1249.951999 in #8
+Epoch #16: test_reward: 2082.000000 ± 442.872442, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #17: test_reward: 1798.000000 ± 524.438748, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #18: test_reward: 1592.000000 ± 236.254100, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #19: test_reward: 1582.000000 ± 84.711274, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #20: test_reward: 1611.000000 ± 713.056099, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #21: test_reward: 1614.000000 ± 217.724597, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #22: test_reward: 1478.000000 ± 141.053181, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #23: test_reward: 1751.000000 ± 311.269979, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #24: test_reward: 1718.000000 ± 246.203168, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #25: test_reward: 1744.000000 ± 286.083904, best_reward: 2082.000000 ± 442.872442 in #16
+Epoch #26: test_reward: 2153.000000 ± 750.120657, best_reward: 2153.000000 ± 750.120657 in #26
+Epoch #27: test_reward: 1627.000000 ± 383.302752, best_reward: 2153.000000 ± 750.120657 in #26
+Epoch #28: test_reward: 2448.000000 ± 948.944677, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #29: test_reward: 1606.000000 ± 369.843210, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #30: test_reward: 2125.000000 ± 481.336681, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #31: test_reward: 1937.000000 ± 335.232755, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #32: test_reward: 1917.000000 ± 464.220853, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #33: test_reward: 1797.000000 ± 309.711156, best_reward: 2448.000000 ± 948.944677 in #28
+Epoch #34: test_reward: 2748.000000 ± 1080.470268, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #35: test_reward: 1957.000000 ± 191.470624, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #36: test_reward: 2140.000000 ± 396.560210, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #37: test_reward: 2246.000000 ± 500.063996, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #38: test_reward: 2303.000000 ± 444.410846, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #39: test_reward: 2207.000000 ± 528.697456, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #40: test_reward: 2482.000000 ± 431.226159, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #41: test_reward: 2224.000000 ± 184.455957, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #42: test_reward: 2606.000000 ± 426.009390, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #43: test_reward: 2682.000000 ± 249.511523, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #44: test_reward: 2133.000000 ± 234.565556, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #45: test_reward: 2657.000000 ± 281.355647, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #46: test_reward: 2378.000000 ± 345.595139, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #47: test_reward: 2510.000000 ± 136.088207, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #48: test_reward: 2375.000000 ± 243.074063, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #49: test_reward: 2724.000000 ± 208.384260, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #50: test_reward: 2298.000000 ± 370.912389, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #51: test_reward: 2323.000000 ± 302.193647, best_reward: 2748.000000 ± 1080.470268 in #34
+Epoch #52: test_reward: 2981.000000 ± 697.000000, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #53: test_reward: 2619.000000 ± 445.206694, best_reward: 2981.000000 ± 697.000000 in #52
