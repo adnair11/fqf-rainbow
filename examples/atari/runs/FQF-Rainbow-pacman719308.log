@@ -97,3 +97,82 @@ Epoch #50: test_reward: 2298.000000 ± 370.912389, best_reward: 2748.000000 ± 1
 Epoch #51: test_reward: 2323.000000 ± 302.193647, best_reward: 2748.000000 ± 1080.470268 in #34
 Epoch #52: test_reward: 2981.000000 ± 697.000000, best_reward: 2981.000000 ± 697.000000 in #52
 Epoch #53: test_reward: 2619.000000 ± 445.206694, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #54: test_reward: 2542.000000 ± 225.068878, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #55: test_reward: 2463.000000 ± 298.162707, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #56: test_reward: 2654.000000 ± 582.171796, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #57: test_reward: 2379.000000 ± 408.814139, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #58: test_reward: 2588.000000 ± 267.050557, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #59: test_reward: 2432.000000 ± 280.777492, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #60: test_reward: 2358.000000 ± 321.925457, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #61: test_reward: 2130.000000 ± 262.449995, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #62: test_reward: 2587.000000 ± 377.969575, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #63: test_reward: 2547.000000 ± 306.040847, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #64: test_reward: 2845.000000 ± 552.145814, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #65: test_reward: 2346.000000 ± 189.007936, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #66: test_reward: 2274.000000 ± 236.440267, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #67: test_reward: 2180.000000 ± 97.775252, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #68: test_reward: 2350.000000 ± 291.376046, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #69: test_reward: 2304.000000 ± 391.693758, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #70: test_reward: 2347.000000 ± 262.032441, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #71: test_reward: 2455.000000 ± 334.761109, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #72: test_reward: 2489.000000 ± 696.555095, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #73: test_reward: 2404.000000 ± 471.703297, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #74: test_reward: 2159.000000 ± 268.083942, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #75: test_reward: 2071.000000 ± 194.085033, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #76: test_reward: 2587.000000 ± 777.367995, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #77: test_reward: 2592.000000 ± 662.431883, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #78: test_reward: 2653.000000 ± 930.215566, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #79: test_reward: 2396.000000 ± 502.298716, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #80: test_reward: 2423.000000 ± 441.272025, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #81: test_reward: 2790.000000 ± 716.589143, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #82: test_reward: 2757.000000 ± 645.756146, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #83: test_reward: 2466.000000 ± 840.752044, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #84: test_reward: 2954.000000 ± 687.709241, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #85: test_reward: 2348.000000 ± 316.632279, best_reward: 2981.000000 ± 697.000000 in #52
+Epoch #86: test_reward: 3233.000000 ± 907.998348, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #87: test_reward: 2629.000000 ± 1074.759973, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #88: test_reward: 2616.000000 ± 763.416007, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #89: test_reward: 2551.000000 ± 563.851931, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #90: test_reward: 2622.000000 ± 636.062890, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #91: test_reward: 2321.000000 ± 455.992324, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #92: test_reward: 3091.000000 ± 795.392356, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #93: test_reward: 2368.000000 ± 750.916773, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #94: test_reward: 3172.000000 ± 785.223535, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #95: test_reward: 2623.000000 ± 814.518876, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #96: test_reward: 3009.000000 ± 830.222259, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #97: test_reward: 2890.000000 ± 710.830500, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #98: test_reward: 2951.000000 ± 954.719330, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #99: test_reward: 2756.000000 ± 1266.800695, best_reward: 3233.000000 ± 907.998348 in #86
+Epoch #100: test_reward: 3184.000000 ± 951.768880, best_reward: 3233.000000 ± 907.998348 in #86
+InfoStats(gradient_step=1000000,
+          best_reward=3233.0,
+          best_reward_std=907.9983480161184,
+          train_step=10000000,
+          train_episode=31602,
+          test_step=1047441,
+          test_episode=1010,
+          timing=TimingStats(total_time=65010.2987537384,
+                             train_time=62390.926923274994,
+                             train_time_collect=23231.996816158295,
+                             train_time_update=37671.797786951065,
+                             test_time=2619.3718304634094,
+                             update_speed=160.27971522682236))
+Setup test envs ...
+Testing agent ...
+CollectStats
+----------------------------------------
+{   'collect_speed': 411.43409675975136,
+    'collect_time': 27.89025044441223,
+    'lens': array([ 970,  978, 1023, 1026, 1084, 1119, 1126, 1224, 1421, 1504]),
+    'lens_stat': {   'max': 1504.0,
+                     'mean': 1147.5,
+                     'min': 970.0,
+                     'std': 174.2275810542062},
+    'n_collected_episodes': 10,
+    'n_collected_steps': 11475,
+    'returns': array([1880., 1880., 2090., 2090., 2340., 2780., 2710., 3810., 4000.,
+       3980.]),
+    'returns_stat': {   'max': 4000.0,
+                        'mean': 2756.0,
+                        'min': 1880.0,
+                        'std': 821.8418339315662}}

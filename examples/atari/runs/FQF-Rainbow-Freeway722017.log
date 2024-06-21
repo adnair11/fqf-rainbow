@@ -1,0 +1,46 @@
+Observations shape: (4, 84, 84)
+Actions shape: 3
+3136
+device is cuda
+3 0.1
+3136
+Dueling is True
+FullQuantileFunctionRainbow(
+  (preprocess): DQN(
+    (net): Sequential(
+      (0): Conv2d(4, 32, kernel_size=(8, 8), stride=(4, 4))
+      (1): ReLU(inplace=True)
+      (2): Conv2d(32, 64, kernel_size=(4, 4), stride=(2, 2))
+      (3): ReLU(inplace=True)
+      (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1))
+      (5): ReLU(inplace=True)
+      (6): Flatten(start_dim=1, end_dim=-1)
+    )
+  )
+  (last): MLP(
+    (model): Sequential(
+      (0): Linear(in_features=3136, out_features=512, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=512, out_features=3, bias=True)
+    )
+  )
+  (embed_model): CosineEmbeddingNetwork(
+    (net): Sequential(
+      (0): Linear(in_features=64, out_features=3136, bias=True)
+      (1): ReLU()
+    )
+  )
+  (advantage_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+  (value_net): Sequential(
+    (0): NoisyLinear()
+    (1): ReLU(inplace=True)
+    (2): NoisyLinear()
+  )
+)
+Noisy is True
+Using PER
+PER as buffer
