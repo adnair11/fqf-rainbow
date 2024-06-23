@@ -137,9 +137,9 @@ dmypy.json
 .pytype/
 
 # customize
-log/
+# log/
 MUJOCO_LOG.TXT
-*.pth
+# *.pth
 .vscode/
 .DS_Store
 *.zip
@@ -162,3 +162,15 @@ docs/conf.py
 examples/atari/runs/FQF-Rainbow-pacman719308.err
 examples/atari/runs/FQF-pacman719307.err
 examples/atari/runs/FQF-pacman719307.err
+examples/atari/log/FreewayNoFrameskip-v4/c51/3128/240621-141043/events.out.tfevents.1718971843.stud-000.2471214.0
+examples/atari/log/FreewayNoFrameskip-v4/RainbowFQF/3128/240621-103557/events.out.tfevents.1718958957.stud-000.2018213.0
+examples/atari/log/FreewayNoFrameskip-v4/fqf/3128/240620-195326/events.out.tfevents.1718906006.stud-000.3717641.0
+examples/atari/log/MsPacmanNoFrameskip-v4/c51/0/240620-174835/events.out.tfevents.1718898515.stud-000.3368015.0
+examples/atari/log/MsPacmanNoFrameskip-v4/fqf/3128/240619-092731/events.out.tfevents.1718782051.stud-000.1216138.0
+examples/atari/log/MsPacmanNoFrameskip-v4/RainbowFQF/3128/240620-005157/events.out.tfevents.1718837517.stud-000.436784.0
+examples/atari/log/PongNoFrameskip-v4/fqf/3128/240619-014024/events.out.tfevents.1718754024.stud-000.3088354.0
+examples/atari/log/PongNoFrameskip-v4/RainbowFQF/3128/240618-235033/events.out.tfevents.1718747433.stud-000.2460191.0
+examples/atari/log/TennisNoFrameskip-v4/c51/3128/240623-155148/events.out.tfevents.1719150708.stud-000.4023040.0
+examples/atari/log/TennisNoFrameskip-v4/fqf/3128/240622-032901/events.out.tfevents.1719019741.stud-000.3856712.0
+examples/atari/log/TennisNoFrameskip-v4/fqf/3128/240622-122535/events.out.tfevents.1719051935.stud-000.2776436.0
+examples/atari/log/TennisNoFrameskip-v4/RainbowFQF/3128/240623-135749/events.out.tfevents.1719143869.stud-000.2028648.0
