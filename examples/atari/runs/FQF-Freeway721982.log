@@ -80,3 +80,54 @@ Epoch #77: test_reward: 32.100000 ± 0.700000, best_reward: 33.000000 ± 0.00000
 Epoch #78: test_reward: 32.900000 ± 0.300000, best_reward: 33.000000 ± 0.000000 in #62
 Epoch #79: test_reward: 32.400000 ± 0.489898, best_reward: 33.000000 ± 0.000000 in #62
 Epoch #80: test_reward: 32.500000 ± 0.500000, best_reward: 33.000000 ± 0.000000 in #62
+Epoch #81: test_reward: 32.500000 ± 0.500000, best_reward: 33.000000 ± 0.000000 in #62
+Epoch #82: test_reward: 32.500000 ± 0.500000, best_reward: 33.000000 ± 0.000000 in #62
+Epoch #83: test_reward: 32.400000 ± 0.489898, best_reward: 33.000000 ± 0.000000 in #62
+Epoch #84: test_reward: 33.100000 ± 0.300000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #85: test_reward: 30.900000 ± 0.700000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #86: test_reward: 33.000000 ± 0.000000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #87: test_reward: 33.000000 ± 0.447214, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #88: test_reward: 32.600000 ± 0.663325, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #89: test_reward: 31.900000 ± 1.135782, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #90: test_reward: 32.300000 ± 0.781025, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #91: test_reward: 32.900000 ± 0.300000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #92: test_reward: 32.900000 ± 0.300000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #93: test_reward: 32.700000 ± 0.458258, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #94: test_reward: 32.700000 ± 0.458258, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #95: test_reward: 32.400000 ± 0.663325, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #96: test_reward: 32.000000 ± 1.183216, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #97: test_reward: 31.000000 ± 1.095445, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #98: test_reward: 32.800000 ± 0.600000, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #99: test_reward: 32.700000 ± 0.458258, best_reward: 33.100000 ± 0.300000 in #84
+Epoch #100: test_reward: 32.000000 ± 0.447214, best_reward: 33.100000 ± 0.300000 in #84
+InfoStats(gradient_step=1000000,
+          best_reward=33.1,
+          best_reward_std=0.3,
+          train_step=10000000,
+          train_episode=4890,
+          test_step=2064883,
+          test_episode=1010,
+          timing=TimingStats(total_time=65720.7962770462,
+                             train_time=60441.93375849724,
+                             train_time_collect=25560.760640621185,
+                             train_time_update=33749.855629205704,
+                             test_time=5278.862518548965,
+                             update_speed=165.44804870003267))
+Setup test envs ...
+Testing agent ...
+CollectStats
+----------------------------------------
+{   'collect_speed': 392.3854770393471,
+    'collect_time': 52.12476301193237,
+    'lens': array([2042, 2043, 2044, 2045, 2045, 2046, 2046, 2047, 2047, 2048]),
+    'lens_stat': {   'max': 2048.0,
+                     'mean': 2045.3,
+                     'min': 2042.0,
+                     'std': 1.7916472867168918},
+    'n_collected_episodes': 10,
+    'n_collected_steps': 20453,
+    'returns': array([32., 30., 32., 33., 32., 32., 32., 32., 33., 32.]),
+    'returns_stat': {   'max': 33.0,
+                        'mean': 32.0,
+                        'min': 30.0,
+                        'std': 0.7745966692414834}}
