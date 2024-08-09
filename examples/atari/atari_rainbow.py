@@ -173,7 +173,7 @@ def test_rainbow(args: argparse.Namespace = get_args()) -> None:
         if env.spec.reward_threshold:
             return mean_rewards >= env.spec.reward_threshold
         if "Pong" in args.task:
-            return mean_rewards >= 20
+            return mean_rewards >= 21
         return False
 
     def train_fn(epoch: int, env_step: int) -> None:

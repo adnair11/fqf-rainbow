@@ -6,30 +6,37 @@ import sys
 
 import numpy as np
 import torch
-from atari_network import C51
+from atari_network import DQN
 from atari_wrapper import make_atari_env
 
-from tianshou.data import Collector, VectorReplayBuffer
+from tianshou.data import Collector, PrioritizedVectorReplayBuffer, VectorReplayBuffer
 from tianshou.highlevel.logger import LoggerFactoryDefault
-from tianshou.policy import C51Policy
+from tianshou.policy import FQFPolicy,FQF_RainbowPolicy
 from tianshou.policy.base import BasePolicy
 from tianshou.trainer import OffpolicyTrainer
+from tianshou.utils.net.discrete import FractionProposalNetwork, FullQuantileFunction, FullQuantileFunctionRainbow
+import optuna
+import logging
+import pickle
 
 
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task", type=str, default="PongNoFrameskip-v4")
+    parser.add_argument("--task", type=str, default="SpaceInvadersNoFrameskip-v4")
+    parser.add_argument("--algo-name", type=str, default="RainbowFQF-tuning")
     parser.add_argument("--seed", type=int, default=3128)
     parser.add_argument("--scale-obs", type=int, default=0)
     parser.add_argument("--eps-test", type=float, default=0.005)
     parser.add_argument("--eps-train", type=float, default=1.0)
     parser.add_argument("--eps-train-final", type=float, default=0.05)
     parser.add_argument("--buffer-size", type=int, default=100000)
-    parser.add_argument("--lr", type=float, default=0.0001)
+    parser.add_argument("--lr", type=float, default=5e-5)
+    parser.add_argument("--fraction-lr", type=float, default=2.5e-9)
     parser.add_argument("--gamma", type=float, default=0.99)
-    parser.add_argument("--num-atoms", type=int, default=51)
-    parser.add_argument("--v-min", type=float, default=-10.0)
-    parser.add_argument("--v-max", type=float, default=10.0)
+    parser.add_argument("--num-fractions", type=int, default=32)
+    parser.add_argument("--num-cosines", type=int, default=64)
+    parser.add_argument("--ent-coef", type=float, default=10.0)
+    parser.add_argument("--hidden-sizes", type=int, nargs="*", default=[512])
     parser.add_argument("--n-step", type=int, default=3)
     parser.add_argument("--target-update-freq", type=int, default=500)
     parser.add_argument("--epoch", type=int, default=100)
@@ -40,6 +47,18 @@ def get_args() -> argparse.Namespace:
     parser.add_argument("--training-num", type=int, default=10)
     parser.add_argument("--test-num", type=int, default=10)
     parser.add_argument("--logdir", type=str, default="log")
+    #rainbow elements
+    parser.add_argument("--no-dueling", action="store_true", default=False)
+    parser.add_argument("--no-noisy", action="store_true", default=False)
+    parser.add_argument("--no-priority", action="store_true", default=False)
+    parser.add_argument("--noisy-std", type=float, default=0.1)
+    # parser.add_argument("--alpha", type=float, default=0.5)
+    # parser.add_argument("--beta", type=float, default=0.4)
+    parser.add_argument("--beta-final", type=float, default=1.0)
+    parser.add_argument("--beta-anneal-step", type=int, default=5000000)
+    parser.add_argument("--no-weight-norm", action="store_true", default=False)
+
+
     parser.add_argument("--render", type=float, default=0.0)
     parser.add_argument(
         "--device",
@@ -63,10 +82,11 @@ def get_args() -> argparse.Namespace:
         help="watch the play of pre-trained policy only",
     )
     parser.add_argument("--save-buffer-name", type=str, default=None)
+    parser.add_argument("--per", type=bool, default=False)
     return parser.parse_args()
 
 
-def test_c51(args: argparse.Namespace = get_args()) -> None:
+def test_fqf(alpha,beta,noisy_std,args: argparse.Namespace = get_args()) -> None:
     env, train_envs, test_envs = make_atari_env(
         args.task,
         args.seed,
@@ -83,20 +103,48 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
     # seed
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
+    # args.noisy_std
+    # args.alpha
+    # args.beta
+
+    # args.alpha = trial.suggest_float('gamma', 0.95, 0.99)
+    args.alpha = alpha
+    args.beta = beta
+    args.noisy_std = noisy_std
+
+    print("alpha and beta and noisy_std",alpha,beta,noisy_std)
     # define model
-    net = C51(*args.state_shape, args.action_shape, args.num_atoms, args.device)
+    feature_net = DQN(*args.state_shape, args.action_shape, args.device, features_only=True)
+    preprocess_net_output_dim = feature_net.output_dim  # Ensure this is correctly set
+    print(preprocess_net_output_dim)
+    net = FullQuantileFunctionRainbow(
+        preprocess_net=feature_net,
+        action_shape=args.action_shape,
+        hidden_sizes=args.hidden_sizes,
+        num_cosines=args.num_cosines,
+        preprocess_net_output_dim=preprocess_net_output_dim,
+        device=args.device,
+        noisy_std = args.noisy_std,
+        is_noisy=not args.no_noisy,  # Set to True to use noisy layers
+        is_dueling = not args.no_dueling,  # Set to True to use noisy layers
+    ).to(args.device)
+    print(net)
     optim = torch.optim.Adam(net.parameters(), lr=args.lr)
+    fraction_net = FractionProposalNetwork(args.num_fractions, net.input_dim)
+    fraction_optim = torch.optim.RMSprop(fraction_net.parameters(), lr=args.fraction_lr)
     # define policy
-    policy: C51Policy = C51Policy(
+    policy: FQF_RainbowPolicy = FQF_RainbowPolicy(
         model=net,
         optim=optim,
-        discount_factor=args.gamma,
+        fraction_model=fraction_net,
+        fraction_optim=fraction_optim,
         action_space=env.action_space,
-        num_atoms=args.num_atoms,
-        v_min=args.v_min,
-        v_max=args.v_max,
+        discount_factor=args.gamma,
+        num_fractions=args.num_fractions,
+        ent_coef=args.ent_coef,
         estimation_step=args.n_step,
         target_update_freq=args.target_update_freq,
+        is_noisy=not args.no_noisy
     ).to(args.device)
     # load a previous policy
     if args.resume_path:
@@ -104,20 +152,35 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         print("Loaded agent from: ", args.resume_path)
     # replay buffer: `save_last_obs` and `stack_num` can be removed together
     # when you have enough RAM
-    buffer = VectorReplayBuffer(
-        args.buffer_size,
-        buffer_num=len(train_envs),
-        ignore_obs_next=True,
-        save_only_last_obs=True,
-        stack_num=args.frames_stack,
-    )
+    buffer: VectorReplayBuffer | PrioritizedVectorReplayBuffer
+    if args.no_priority:
+        buffer = VectorReplayBuffer(
+            args.buffer_size,
+            buffer_num=len(train_envs),
+            ignore_obs_next=True,
+            save_only_last_obs=True,
+            stack_num=args.frames_stack,
+        )
+    else:
+        print("Using PER")
+        buffer = PrioritizedVectorReplayBuffer(
+            args.buffer_size,
+            buffer_num=len(train_envs),
+            ignore_obs_next=True,
+            save_only_last_obs=True,
+            stack_num=args.frames_stack,
+            alpha=args.alpha,
+            beta=args.beta,
+            weight_norm=not args.no_weight_norm,
+        )
+        print("PER as buffer")
     # collector
     train_collector = Collector(policy, train_envs, buffer, exploration_noise=True)
     test_collector = Collector(policy, test_envs, exploration_noise=True)
 
     # log
     now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-    args.algo_name = "c51"
+    # args.algo_name = "fqf_per_noisy"
     log_name = os.path.join(args.task, args.algo_name, str(args.seed), now)
     log_path = os.path.join(args.logdir, log_name)
 
@@ -155,6 +218,16 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         policy.set_eps(eps)
         if env_step % 1000 == 0:
             logger.write("train/env_step", env_step, {"train/eps": eps})
+        if not args.no_priority:
+            if env_step <= args.beta_anneal_step:
+                beta = args.beta - env_step / args.beta_anneal_step * (args.beta - args.beta_final)
+                # print("beta updated - anneal")
+            else:
+                beta = args.beta_final
+                # print("beta updated - final")
+            buffer.set_beta(beta)
+            if env_step % 1000 == 0:
+                logger.write("train/env_step", env_step, {"train/beta": beta})
 
     def test_fn(epoch: int, env_step: int | None) -> None:
         policy.set_eps(args.eps_test)
@@ -162,16 +235,26 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
     # watch agent's performance
     def watch() -> None:
         print("Setup test envs ...")
+        policy.eval()
         policy.set_eps(args.eps_test)
         test_envs.seed(args.seed)
         if args.save_buffer_name:
             print(f"Generate buffer with size {args.buffer_size}")
-            buffer = VectorReplayBuffer(
+            # buffer = VectorReplayBuffer(
+            #     args.buffer_size,
+            #     buffer_num=len(test_envs),
+            #     ignore_obs_next=True,
+            #     save_only_last_obs=True,
+            #     stack_num=args.frames_stack,
+            # )
+            buffer = PrioritizedVectorReplayBuffer(
                 args.buffer_size,
                 buffer_num=len(test_envs),
                 ignore_obs_next=True,
                 save_only_last_obs=True,
                 stack_num=args.frames_stack,
+                alpha=args.alpha,
+                beta=args.beta,
             )
             collector = Collector(policy, test_envs, buffer, exploration_noise=True)
             result = collector.collect(n_step=args.buffer_size)
@@ -210,9 +293,53 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         test_in_train=False,
     ).run()
 
-    pprint.pprint(result)
-    watch()
+    result.pprint_asdict()
+    # watch()
+    return result.best_reward
 
+
+# def objective(tra)
+
+def objective(trial):
+    alpha = trial.suggest_float(name='alpha',low=0.4,high=0.7)
+    beta = trial.suggest_float(name='beta',low=0.4,high=1.0)
+    noisy_std = trial.suggest_float(name='noisy_std',low=0.1,high=0.6)
+    final = test_fqf(alpha,beta,noisy_std,get_args())
+    return final
 
 if __name__ == "__main__":
-    test_c51(get_args())
+
+    directory = "optuna_logs"
+    filename = "SpaceInvaders-sampler.pkl"
+    file_path = os.path.join(directory, filename)
+    os.makedirs(directory, exist_ok=True)
+    # torch.manual_seed(0)
+
+    optuna.logging.get_logger("optuna").addHandler(logging.StreamHandler(sys.stdout))
+    study_name = "FQF-Rainbow-SpaceInvaders-tuning" # Unique identifier of the study.
+    storage_name = "sqlite:///{}.db".format(study_name)
+    
+
+    # # to restore study uncomment this block
+    # restored_sampler = pickle.load(open(file_path, "rb"))
+    # study = optuna.create_study(
+    #     study_name=study_name, storage=storage_name, load_if_exists=True, sampler=restored_sampler
+    # )
+
+    # for new study uncomment this block
+    study = optuna.create_study(direction='maximize',storage=storage_name,study_name=study_name,load_if_exists=True)
+    study.optimize(objective, n_trials=2)
+
+    with open(file_path, "wb") as fout:
+        pickle.dump(study.sampler, fout)  
+
+    # study = optuna.create_study(direction='maximize')
+    # study.optimize(objective, n_trials=5)
+
+    study = optuna.create_study(study_name=study_name, storage=storage_name, load_if_exists=True)
+    df = study.trials_dataframe()
+    print(df)
+    print(study.best_params)
+    print(study.best_value)
+    print(study.best_trial)
+    # test_fqf(get_args())

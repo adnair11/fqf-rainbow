@@ -1,10 +1,6 @@
-# FQF-Rainbow
-This project is part of my Master's Thesis at Univeristy of Hildesheim. The repo is a fork of [Tianshou](https://github.com/thu-ml/tianshou) on top of which I have added a Rainbow version of the FQF algorithm that can be found in `atari_fqf_rainbow.py`
+# Atari Environment
 
-## Installation and setup
-
-First up , clone this repo.
-
+## EnvPool
 
 We highly recommend using envpool to run the following experiments. To install, in a linux machine, type:
 

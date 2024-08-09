@@ -37,8 +37,8 @@ def get_args() -> argparse.Namespace:
     parser.add_argument("--step-per-collect", type=int, default=10)
     parser.add_argument("--update-per-step", type=float, default=0.1)
     parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--training-num", type=int, default=10)
-    parser.add_argument("--test-num", type=int, default=10)
+    parser.add_argument("--training-num", type=int, default=1)
+    parser.add_argument("--test-num", type=int, default=1)
     parser.add_argument("--logdir", type=str, default="log")
     parser.add_argument("--render", type=float, default=0.0)
     parser.add_argument(
@@ -104,37 +104,37 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         print("Loaded agent from: ", args.resume_path)
     # replay buffer: `save_last_obs` and `stack_num` can be removed together
     # when you have enough RAM
-    buffer = VectorReplayBuffer(
-        args.buffer_size,
-        buffer_num=len(train_envs),
-        ignore_obs_next=True,
-        save_only_last_obs=True,
-        stack_num=args.frames_stack,
-    )
+    # buffer = VectorReplayBuffer(
+    #     args.buffer_size,
+    #     buffer_num=len(train_envs),
+    #     ignore_obs_next=True,
+    #     save_only_last_obs=True,
+    #     stack_num=args.frames_stack,
+    # )
     # collector
-    train_collector = Collector(policy, train_envs, buffer, exploration_noise=True)
+    # train_collector = Collector(policy, train_envs, buffer, exploration_noise=True)
     test_collector = Collector(policy, test_envs, exploration_noise=True)
 
-    # log
-    now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
-    args.algo_name = "c51"
-    log_name = os.path.join(args.task, args.algo_name, str(args.seed), now)
-    log_path = os.path.join(args.logdir, log_name)
+    # # log
+    # now = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
+    # args.algo_name = "c51"
+    # log_name = os.path.join(args.task, args.algo_name, str(args.seed), now)
+    # log_path = os.path.join(args.logdir, log_name)
 
-    # logger
-    logger_factory = LoggerFactoryDefault()
-    if args.logger == "wandb":
-        logger_factory.logger_type = "wandb"
-        logger_factory.wandb_project = args.wandb_project
-    else:
-        logger_factory.logger_type = "tensorboard"
+    # # logger
+    # logger_factory = LoggerFactoryDefault()
+    # if args.logger == "wandb":
+    #     logger_factory.logger_type = "wandb"
+    #     logger_factory.wandb_project = args.wandb_project
+    # else:
+    #     logger_factory.logger_type = "tensorboard"
 
-    logger = logger_factory.create_logger(
-        log_dir=log_path,
-        experiment_name=log_name,
-        run_id=args.resume_id,
-        config_dict=vars(args),
-    )
+    # logger = logger_factory.create_logger(
+    #     log_dir=log_path,
+    #     experiment_name=log_name,
+    #     run_id=args.resume_id,
+    #     config_dict=vars(args),
+    # )
 
     def save_best_fn(policy: BasePolicy) -> None:
         torch.save(policy.state_dict(), os.path.join(log_path, "policy.pth"))
@@ -143,7 +143,7 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         if env.spec.reward_threshold:
             return mean_rewards >= env.spec.reward_threshold
         if "Pong" in args.task:
-            return mean_rewards >= 21
+            return mean_rewards >= 20
         return False
 
     def train_fn(epoch: int, env_step: int) -> None:
@@ -166,18 +166,18 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         test_envs.seed(args.seed)
         if args.save_buffer_name:
             print(f"Generate buffer with size {args.buffer_size}")
-            buffer = VectorReplayBuffer(
-                args.buffer_size,
-                buffer_num=len(test_envs),
-                ignore_obs_next=True,
-                save_only_last_obs=True,
-                stack_num=args.frames_stack,
-            )
-            collector = Collector(policy, test_envs, buffer, exploration_noise=True)
-            result = collector.collect(n_step=args.buffer_size)
-            print(f"Save buffer into {args.save_buffer_name}")
-            # Unfortunately, pickle will cause oom with 1M buffer size
-            buffer.save_hdf5(args.save_buffer_name)
+            # buffer = VectorReplayBuffer(
+            #     args.buffer_size,
+            #     buffer_num=len(test_envs),
+            #     ignore_obs_next=True,
+            #     save_only_last_obs=True,
+            #     stack_num=args.frames_stack,
+            # )
+            # collector = Collector(policy, test_envs, buffer, exploration_noise=True)
+            # result = collector.collect(n_step=args.buffer_size)
+            # print(f"Save buffer into {args.save_buffer_name}")
+            # # Unfortunately, pickle will cause oom with 1M buffer size
+            # buffer.save_hdf5(args.save_buffer_name)
         else:
             print("Testing agent ...")
             test_collector.reset()
@@ -188,29 +188,29 @@ def test_c51(args: argparse.Namespace = get_args()) -> None:
         watch()
         sys.exit(0)
 
-    # test train_collector and start filling replay buffer
-    train_collector.reset()
-    train_collector.collect(n_step=args.batch_size * args.training_num)
-    # trainer
-    result = OffpolicyTrainer(
-        policy=policy,
-        train_collector=train_collector,
-        test_collector=test_collector,
-        max_epoch=args.epoch,
-        step_per_epoch=args.step_per_epoch,
-        step_per_collect=args.step_per_collect,
-        episode_per_test=args.test_num,
-        batch_size=args.batch_size,
-        train_fn=train_fn,
-        test_fn=test_fn,
-        stop_fn=stop_fn,
-        save_best_fn=save_best_fn,
-        logger=logger,
-        update_per_step=args.update_per_step,
-        test_in_train=False,
-    ).run()
+    # # test train_collector and start filling replay buffer
+    # train_collector.reset()
+    # train_collector.collect(n_step=args.batch_size * args.training_num)
+    # # trainer
+    # result = OffpolicyTrainer(
+    #     policy=policy,
+    #     train_collector=train_collector,
+    #     test_collector=test_collector,
+    #     max_epoch=args.epoch,
+    #     step_per_epoch=args.step_per_epoch,
+    #     step_per_collect=args.step_per_collect,
+    #     episode_per_test=args.test_num,
+    #     batch_size=args.batch_size,
+    #     train_fn=train_fn,
+    #     test_fn=test_fn,
+    #     stop_fn=stop_fn,
+    #     save_best_fn=save_best_fn,
+    #     logger=logger,
+    #     update_per_step=args.update_per_step,
+    #     test_in_train=False,
+    # ).run()
 
-    pprint.pprint(result)
+    # pprint.pprint(result)
     watch()
 
 
